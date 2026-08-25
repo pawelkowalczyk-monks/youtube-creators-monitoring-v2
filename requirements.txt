@@ -1,0 +1,21 @@
+# Google Gemini GenAI SDK
+google-genai>=0.1.1
+
+# Spreadsheet Parsing Engines (Excel / CSV)
+pandas>=2.0.0
+openpyxl>=3.1.0
+python-calamine>=0.2.0
+
+# Terminal Interface (Rich Formatting & Interactive Prompts)
+rich>=13.0.0
+
+# Environment Configuration Loader
+python-dotenv>=1.0.0
+
+# YouTube Slicing & Audio Extraction Codecs
+yt-dlp>=2024.0.0
+static-ffmpeg>=2.5.0
+pydantic>=2.0.0
+
+# UI Dashboard
+streamlit>=1.30.0

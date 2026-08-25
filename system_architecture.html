@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System Architecture - Technical Schematic</title>
+    <style>
+        :root {
+            --bg-color: #ffffff;
+            --border-color: #000000;
+            --text-color: #111111;
+            --box-bg: #fafafa;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            padding: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1250px; /* Expanded by 30% (from 960px) */
+            border: 2px solid var(--border-color);
+            padding: 30px; /* Expanded padding */
+            background: #ffffff;
+        }
+
+        header {
+            margin-bottom: 26px;
+            border-bottom: 1.5px solid var(--border-color);
+            padding-bottom: 14px;
+        }
+
+        h1 {
+            font-size: 1.4rem; /* Expanded by 30% */
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        p.subtitle {
+            font-size: 1.0rem; /* Expanded by 30% */
+            color: #555;
+            margin-top: 4px;
+        }
+
+        .diagram-flow {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px; /* Expanded gap */
+        }
+
+        .step-block {
+            flex: 1;
+            border: 2px solid var(--border-color); /* Stronger border */
+            background: var(--box-bg);
+            min-height: 190px; /* Expanded by ~30% (from 145px) */
+            display: flex;
+            flex-direction: column;
+        }
+
+        .step-header {
+            background: var(--border-color);
+            color: #ffffff;
+            font-size: 0.9rem; /* Expanded by 30% */
+            font-weight: 700;
+            padding: 6px 12px;
+            display: flex;
+            justify-content: space-between;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .step-content {
+            padding: 14px; /* Expanded padding */
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            flex: 1;
+        }
+
+        .step-title {
+            font-size: 1.1rem; /* Expanded by 30% */
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .step-desc {
+            font-size: 0.92rem; /* Expanded by 30% */
+            color: #222222;
+            line-height: 1.4;
+        }
+
+        .step-file {
+            font-family: "Courier New", Courier, monospace;
+            font-size: 0.85rem; /* Expanded by 30% */
+            font-weight: bold;
+            color: #555555;
+            margin-top: auto;
+            border-top: 1px dotted #ccc;
+            padding-top: 6px;
+        }
+
+        .connector {
+            font-size: 1.5rem; /* Expanded by 30% */
+            font-weight: bold;
+            color: var(--border-color);
+            user-select: none;
+        }
+
+        @media (max-width: 1024px) {
+            .diagram-flow {
+                flex-direction: column;
+                gap: 20px;
+            }
+            .connector {
+                transform: rotate(90deg);
+                margin: 6px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>Creators Monitor - Pipeline Architecture Schematic</h1>
+        </header>
+
+        <main class="diagram-flow">
+            <!-- STEP 1 -->
+            <div class="step-block">
+                <div class="step-header">
+                    <span>Step 01</span>
+                    <span>Ingest</span>
+                </div>
+                <div class="step-content">
+                    <h2 class="step-title">Ingestion</h2>
+                    <p class="step-desc">Parses Brandwatch Excel sheets, filters creator reach columns, and extracts YouTube vlog links.</p>
+                    <div class="step-file">file_manager.py</div>
+                </div>
+            </div>
+
+            <div class="connector">→</div>
+
+            <!-- STEP 2 -->
+            <div class="step-block">
+                <div class="step-header">
+                    <span>Step 02</span>
+                    <span>Transcode</span>
+                </div>
+                <div class="step-content">
+                    <h2 class="step-title">Transcoding</h2>
+                    <p class="step-desc">Downloads clips via yt-dlp. Slices and down-samples audio to 16kHz mono speech MP3s via ffmpeg.</p>
+                    <div class="step-file">audio_extractor.py</div>
+                </div>
+            </div>
+
+            <div class="connector">→</div>
+
+            <!-- STEP 3 -->
+            <div class="step-block">
+                <div class="step-header">
+                    <span>Step 03</span>
+                    <span>Audit</span>
+                </div>
+                <div class="step-content">
+                    <h2 class="step-title">Gemini Audit</h2>
+                    <p class="step-desc">Uploads segments and prompts gemini-3-flash to identify organic brand engagement opportunities.</p>
+                    <div class="step-file">analyzer.py</div>
+                </div>
+            </div>
+
+            <div class="connector">→</div>
+
+            <!-- STEP 4 -->
+            <div class="step-block">
+                <div class="step-header">
+                    <span>Step 04</span>
+                    <span>Compile</span>
+                </div>
+                <div class="step-content">
+                    <h2 class="step-title">Compiler</h2>
+                    <p class="step-desc">Assembles parsed findings and compiles a responsive light-theme HTML editorial newsletter layout.</p>
+                    <div class="step-file">generator.py</div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+</body>
+</html>

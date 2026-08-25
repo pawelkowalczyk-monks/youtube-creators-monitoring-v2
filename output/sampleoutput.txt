@@ -1,0 +1,280 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="x-apple-disable-message-reformatting">
+<title>Creator Insights</title>
+<style type="text/css">
+    @import url('https://fonts.googleapis.com/css?family=Roboto:400,500,700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&display=swap');
+    
+    body, table, td, p, a, li, blockquote {
+        -webkit-text-size-adjust: 100%;
+        -ms-text-size-adjust: 100%;
+    }
+    table, td {
+        mso-table-lspace: 0pt;
+        mso-table-rspace: 0pt;
+    }
+    img {
+        -ms-interpolation-mode: bicubic;
+        border: 0;
+        height: auto;
+        line-height: 100%;
+        outline: none;
+        text-decoration: none;
+    }
+    body {
+        margin: 0;
+        padding: 0;
+        width: 100% !important;
+        height: 100% !important;
+        background-color: #F8F9FA;
+        font-family: 'Google Sans', Roboto, Helvetica, Arial, sans-serif;
+    }
+    /* Client-specific styles */
+    .apple-link a {
+        color: #5F6368 !important;
+        text-decoration: none !important;
+    }
+    a:hover {
+        font-weight: bold !important;
+        text-decoration: none !important;
+    }
+</style>
+</head>
+<body style="margin: 0; padding: 0; background-color: #F8F9FA;">
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #F8F9FA;">
+    <tr>
+        <td align="center" style="padding: 40px 10px;">
+            
+            <table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 640px; background-color: #FFFFFF; border: 1px solid #DADCE0; border-radius: 16px; overflow: hidden; box-shadow: 0 2px 6px rgba(0,0,0,0.05);">
+                
+                <tr>
+                    <td align="center" style="background-color: #FFFFFF; padding: 40px 40px 20px 40px; border-bottom: 1px solid #DADCE0;">
+                        <img src="https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_92x30dp.png" alt="Google" width="92" style="display: block; width: 92px; border: 0;">
+                        <h1 style="margin: 20px 0 5px 0; font-family: 'Google Sans', Roboto, Helvetica, Arial, sans-serif; font-size: 28px; font-weight: 700; color: #202124; line-height: 1.2;">Creator Insights</h1>
+                        <p style="margin: 0; font-family: Roboto, Helvetica, Arial, sans-serif; font-size: 14px; color: #5F6368;">December 04, 2025</p>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td align="left" style="background-color: #FFFFFF; padding: 30px 40px;">
+                        <p style="margin: 0 0 12px 0; font-family: Roboto, Helvetica, Arial, sans-serif; font-size: 12px; font-weight: 700; color: #1A73E8; text-transform: uppercase; letter-spacing: 1px;">TL;DR</p>
+                        <p style="margin: 0; font-family: 'Google Sans', Roboto, Helvetica, Arial, sans-serif; font-size: 16px; color: #202124; line-height: 1.6;">
+                            This week, creators showed off diverse talents, from Kaatsup's multi-faceted streaming and art to Loulou Kitchen's viral holiday recipes and Manon Bril's engaging history lessons. Meanwhile, video creators like MarionCameleon sought help to showcase complex makeup, Andie Ella looked to streamline product review recall, and Lenadorable navigated personal chaos, highlighting AI's potential to enhance content visuals, streamline organization, and spark creative ideas.
+                        </p>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td align="left" style="background-color: #F8F9FA; padding: 30px 40px; border-top: 1px solid #DADCE0; border-bottom: 1px solid #DADCE0;">
+                        <p style="margin: 0 0 20px 0; font-family: Roboto, Helvetica, Arial, sans-serif; font-size: 12px; font-weight: 700; color: #1A73E8; text-transform: uppercase; letter-spacing: 1px;">KEY HIGHLIGHTS</p>
+                        
+                        <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                            <tr>
+                <td valign="top" width="20" style="padding-bottom: 16px;">
+                    <span style="font-size: 18px; line-height: 18px; color: #1A73E8;">&bull;</span>
+                </td>
+                <td valign="top" style="padding-bottom: 16px; font-family: Roboto, Helvetica, Arial, sans-serif; font-size: 14px; color: #202124; line-height: 1.5;">
+                    Kaatsup's multi-faceted creative endeavors are highlighted, from streaming to painting for the GP Explorer F4. <a href="http://twitter.com/Kaatsup/statuses/1994112922658983950" style="color: #1A73E8; text-decoration: none;">see post</a>
+                </td>
+            </tr>
+<tr>
+                <td valign="top" width="20" style="padding-bottom: 16px;">
+                    <span style="font-size: 18px; line-height: 18px; color: #1A73E8;">&bull;</span>
+                </td>
+                <td valign="top" style="padding-bottom: 16px; font-family: Roboto, Helvetica, Arial, sans-serif; font-size: 14px; color: #202124; line-height: 1.5;">
+                    Community playfully acknowledges Kaatsup's unpredictable content with the recurring phrase "Il y a rien qui va avec Kaatsup." <a href="https://www.instagram.com/reel/DRo1DCwDem9/" style="color: #1A73E8; text-decoration: none;">see post</a>
+                </td>
+            </tr>
+<tr>
+                <td valign="top" width="20" style="padding-bottom: 16px;">
+                    <span style="font-size: 18px; line-height: 18px; color: #1A73E8;">&bull;</span>
+                </td>
+                <td valign="top" style="padding-bottom: 16px; font-family: Roboto, Helvetica, Arial, sans-serif; font-size: 14px; color: #202124; line-height: 1.5;">
+                    Loulou Kitchen's festive Gravlax and cheese tree recipes go viral, inspiring holiday cooking trends on Instagram. <a href="https://www.cuisineactuelle.fr/culture-food/idees-de-menus/tendances-culinaires/le-sapin-de-fromage-frais-au-saumon-fume-de-louloukitchen-la-recette-de-noel-ultra-chic-qui-affole-instagram-197518" style="color: #1A73E8; text-decoration: none;">see post</a>
+                </td>
+            </tr>
+<tr>
+                <td valign="top" width="20" style="padding-bottom: 16px;">
+                    <span style="font-size: 18px; line-height: 18px; color: #1A73E8;">&bull;</span>
+                </td>
+                <td valign="top" style="padding-bottom: 16px; font-family: Roboto, Helvetica, Arial, sans-serif; font-size: 14px; color: #202124; line-height: 1.5;">
+                    Manon Bril engages audiences with her unique blend of history and humor, exploring the fascinating eccentricities of humanity. <a href="http://twitter.com/francetvculture/statuses/1995387386960789600" style="color: #1A73E8; text-decoration: none;">see post</a>
+                </td>
+            </tr>
+<tr>
+                <td valign="top" width="20" style="padding-bottom: 16px;">
+                    <span style="font-size: 18px; line-height: 18px; color: #1A73E8;">&bull;</span>
+                </td>
+                <td valign="top" style="padding-bottom: 16px; font-family: Roboto, Helvetica, Arial, sans-serif; font-size: 14px; color: #202124; line-height: 1.5;">
+                    Maxime Biaggi's unfiltered, provocative comments continue to generate buzz, including a viral statement about Squeezie's dog. <a href="http://twitter.com/la_cvpucheoff/statuses/1995181290115477572" style="color: #1A73E8; text-decoration: none;">see post</a>
+                </td>
+            </tr>
+<tr>
+                <td valign="top" width="20" style="padding-bottom: 16px;">
+                    <span style="font-size: 18px; line-height: 18px; color: #1A73E8;">&bull;</span>
+                </td>
+                <td valign="top" style="padding-bottom: 16px; font-family: Roboto, Helvetica, Arial, sans-serif; font-size: 14px; color: #202124; line-height: 1.5;">
+                    Andie Ella attends an exclusive Calzedonia dinner with Iris Mittenaere, showcasing her influence in fashion events. <a href="https://www.instagram.com/reel/DRurQFljWBl/" style="color: #1A73E8; text-decoration: none;">see post</a>
+                </td>
+            </tr>
+<tr>
+                <td valign="top" width="20" style="padding-bottom: 16px;">
+                    <span style="font-size: 18px; line-height: 18px; color: #1A73E8;">&bull;</span>
+                </td>
+                <td valign="top" style="padding-bottom: 16px; font-family: Roboto, Helvetica, Arial, sans-serif; font-size: 14px; color: #202124; line-height: 1.5;">
+                    Will Aime and Ashley OA earn community praise for their insightful content and commendable financial management skills. <a href="http://twitter.com/StellaK_D/statuses/1994930556606566426" style="color: #1A73E8; text-decoration: none;">see post</a>
+                </td>
+            </tr>
+                        </table>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td align="left" style="background-color: #FFFFFF; padding: 30px 40px 10px 40px;">
+                        <p style="margin: 0 0 10px 0; font-family: Roboto, Helvetica, Arial, sans-serif; font-size: 12px; font-weight: 700; color: #1A73E8; text-transform: uppercase; letter-spacing: 1px;">VIDEO ANALYSIS</p>
+                    </td>
+                </tr>
+<tr>
+                    <td align="left" style="background-color: #FFFFFF; padding: 10px 40px 30px 40px;">
+                        <table border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #FFFFFF; border: 1px solid #DADCE0; border-radius: 12px; margin-top: 10px;">
+                            <tr>
+                                <td style="padding: 24px;">
+                                    <p style="margin: 0; font-family: 'Google Sans', Roboto, Helvetica, Arial, sans-serif; font-size: 16px; font-weight: 700; color: #202124;">MarionCameleon</p>
+                                    <a href="https://www.youtube.com/watch?v=yaV0nw7MfjA" style="display:block; margin: 4px 0 16px 0; font-family: Roboto, Helvetica, Arial, sans-serif; font-size: 14px; color: #1A73E8; text-decoration: none;">Watch Video</a>
+                                    
+                                    <p style="margin: 0 0 4px 0; font-family: Roboto, Helvetica, Arial, sans-serif; font-size: 11px; font-weight: 700; color: #5F6368; text-transform: uppercase;">SUMMARY</p>
+                                    <p style="margin: 0; font-family: Roboto, Helvetica, Arial, sans-serif; font-size: 14px; color: #202124; line-height: 1.5;">The creator reviews her new "Softwear" eyeshadow palette and accompanying makeup brushes, detailing their unique features, organization, and demonstrating a makeup look using the first color harmony.</p>
+                                    
+                                    <p style="margin: 16px 0 8px 0; font-family: Roboto, Helvetica, Arial, sans-serif; font-size: 11px; font-weight: 700; color: #5F6368; text-transform: uppercase;">OPPORTUNITIES</p>
+                                    <ul style="margin: 0; padding-left: 20px; font-family: Roboto, Helvetica, Arial, sans-serif; font-size: 13px; color: #202124; line-height: 1.5;">
+                                        <li style="margin-bottom: 6px;">Creator finds it challenging to visually capture the true beauty of complex shimmer eyeshadows on camera. (09:16 - 09:37)</li>
+                                        <li style="margin-bottom: 6px;">Creator expresses desire to showcase versatile top-coat eyeshadows with many layering possibilities. (15:17 - 16:31)</li>
+                                        <li style="">Creator aims to achieve precise and unique makeup looks, demonstrating advanced application techniques. (19:32 - 20:07)</li>
+                                    </ul>
+
+                                    <table border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #E8F0FE; border-radius: 8px; margin-top: 16px;">
+                                        <tr>
+                                            <td valign="top" style="padding: 12px;">
+                                                <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                                                    <tr>
+                                                        <td valign="top" width="20" style="font-size: 16px; color: #174EA6; line-height: 1;">&#10022;</td>
+                                                        <td valign="top">
+                                                            <p style="margin: 0 0 8px 0; font-family: 'Google Sans', Roboto, Helvetica, Arial, sans-serif; font-size: 13px; font-weight: 700; color: #174EA6;">How Gemini can help</p>
+                                                            <ul style="margin: 0; padding-left: 16px; font-family: Roboto, Helvetica, Arial, sans-serif; font-size: 13px; color: #174EA6; line-height: 1.5;">
+                                                                <li style="margin-bottom: 6px;">Generate high-fidelity swatches and close-up visuals emphasizing complex shimmer textures with Gemini.</li>
+                                        <li style="margin-bottom: 6px;">Brainstorm diverse layering combinations and visualize unique top-coat eyeshadow looks.</li>
+                                        <li style="">Generate creative makeup ideas and visual concepts for precise application techniques.</li>
+                                                            </ul>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+<tr>
+                    <td align="left" style="background-color: #FFFFFF; padding: 10px 40px 30px 40px;">
+                        <table border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #FFFFFF; border: 1px solid #DADCE0; border-radius: 12px; margin-top: 10px;">
+                            <tr>
+                                <td style="padding: 24px;">
+                                    <p style="margin: 0; font-family: 'Google Sans', Roboto, Helvetica, Arial, sans-serif; font-size: 16px; font-weight: 700; color: #202124;">Andie Ella</p>
+                                    <a href="https://www.youtube.com/watch?v=0eeb-9QQKaU" style="display:block; margin: 4px 0 16px 0; font-family: Roboto, Helvetica, Arial, sans-serif; font-size: 14px; color: #1A73E8; text-decoration: none;">Watch Video</a>
+                                    
+                                    <p style="margin: 0 0 4px 0; font-family: Roboto, Helvetica, Arial, sans-serif; font-size: 11px; font-weight: 700; color: #5F6368; text-transform: uppercase;">SUMMARY</p>
+                                    <p style="margin: 0; font-family: Roboto, Helvetica, Arial, sans-serif; font-size: 14px; color: #202124; line-height: 1.5;">The creator unboxes and reviews multiple beauty advent calendars from brands like Yves Rocher, L'Occitane, and Sephora, discussing products, value, and packaging.</p>
+                                    
+                                    <p style="margin: 16px 0 8px 0; font-family: Roboto, Helvetica, Arial, sans-serif; font-size: 11px; font-weight: 700; color: #5F6368; text-transform: uppercase;">OPPORTUNITIES</p>
+                                    <ul style="margin: 0; padding-left: 20px; font-family: Roboto, Helvetica, Arial, sans-serif; font-size: 13px; color: #202124; line-height: 1.5;">
+                                        <li style="margin-bottom: 6px;">Creator wishes she could remember past product reviews to compare items year-on-year (00:51 - 01:03).</li>
+                                        <li style="margin-bottom: 6px;">Creator wants to know if Yves Rocher still produces her nostalgic "Sexy Pulp" mascara (05:58 - 06:05).</li>
+                                        <li style="">Creator judges the physical quality of advent calendar packaging as a letdown for premium products (24:09 - 24:45).</li>
+                                    </ul>
+
+                                    <table border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #E8F0FE; border-radius: 8px; margin-top: 16px;">
+                                        <tr>
+                                            <td valign="top" style="padding: 12px;">
+                                                <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                                                    <tr>
+                                                        <td valign="top" width="20" style="font-size: 16px; color: #174EA6; line-height: 1;">&#10022;</td>
+                                                        <td valign="top">
+                                                            <p style="margin: 0 0 8px 0; font-family: 'Google Sans', Roboto, Helvetica, Arial, sans-serif; font-size: 13px; font-weight: 700; color: #174EA6;">How Gemini can help</p>
+                                                            <ul style="margin: 0; padding-left: 16px; font-family: Roboto, Helvetica, Arial, sans-serif; font-size: 13px; color: #174EA6; line-height: 1.5;">
+                                                                <li style="margin-bottom: 6px;">Use Gemini to analyze past video transcripts and summarize product reviews for comparisons.</li>
+                                        <li style="margin-bottom: 6px;">Generate a list of current Yves Rocher mascaras and similar alternatives to "Sexy Pulp".</li>
+                                        <li style="">Brainstorm innovative, premium advent calendar packaging designs and visual concepts.</li>
+                                                            </ul>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+<tr>
+                    <td align="left" style="background-color: #FFFFFF; padding: 10px 40px 30px 40px;">
+                        <table border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #FFFFFF; border: 1px solid #DADCE0; border-radius: 12px; margin-top: 10px;">
+                            <tr>
+                                <td style="padding: 24px;">
+                                    <p style="margin: 0; font-family: 'Google Sans', Roboto, Helvetica, Arial, sans-serif; font-size: 16px; font-weight: 700; color: #202124;">Lenadorable</p>
+                                    <a href="https://www.youtube.com/watch?v=GRNx41MG6MQ" style="display:block; margin: 4px 0 16px 0; font-family: Roboto, Helvetica, Arial, sans-serif; font-size: 14px; color: #1A73E8; text-decoration: none;">Watch Video</a>
+                                    
+                                    <p style="margin: 0 0 4px 0; font-family: Roboto, Helvetica, Arial, sans-serif; font-size: 11px; font-weight: 700; color: #5F6368; text-transform: uppercase;">SUMMARY</p>
+                                    <p style="margin: 0; font-family: Roboto, Helvetica, Arial, sans-serif; font-size: 14px; color: #202124; line-height: 1.5;">The creator shares her chaotic week, including a bathroom flood, her friend's visit to Paris for gift exchanges and thrift shopping, a large grocery haul, and her plans to restart journaling, all while celebrating her brand's anniversary.</p>
+                                    
+                                    <p style="margin: 16px 0 8px 0; font-family: Roboto, Helvetica, Arial, sans-serif; font-size: 11px; font-weight: 700; color: #5F6368; text-transform: uppercase;">OPPORTUNITIES</p>
+                                    <ul style="margin: 0; padding-left: 20px; font-family: Roboto, Helvetica, Arial, sans-serif; font-size: 13px; color: #202124; line-height: 1.5;">
+                                        <li style="margin-bottom: 6px;">Creator wishes to make a cozy vlog despite her apartment being flooded (01:00 - 01:05).</li>
+                                        <li style="margin-bottom: 6px;">Creator feels overwhelmed and struggles to manage daily basic tasks due to stress (07:03 - 07:18).</li>
+                                        <li style="">Creator wants to visualize her boyfriend's excited reaction to receiving a new perfume (24:32 - 24:35).</li>
+                                    </ul>
+
+                                    <table border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #E8F0FE; border-radius: 8px; margin-top: 16px;">
+                                        <tr>
+                                            <td valign="top" style="padding: 12px;">
+                                                <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                                                    <tr>
+                                                        <td valign="top" width="20" style="font-size: 16px; color: #174EA6; line-height: 1;">&#10022;</td>
+                                                        <td valign="top">
+                                                            <p style="margin: 0 0 8px 0; font-family: 'Google Sans', Roboto, Helvetica, Arial, sans-serif; font-size: 13px; font-weight: 700; color: #174EA6;">How Gemini can help</p>
+                                                            <ul style="margin: 0; padding-left: 16px; font-family: Roboto, Helvetica, Arial, sans-serif; font-size: 13px; color: #174EA6; line-height: 1.5;">
+                                                                <li style="margin-bottom: 6px;">Use Gemini to brainstorm cozy vlog ideas adaptable to chaotic, unexpected home situations.</li>
+                                        <li style="margin-bottom: 6px;">Generate prioritized daily task lists and simple organizational strategies for creator’s workflow.</li>
+                                        <li style="">Create visual concepts or short scripts imagining her boyfriend’s delighted reaction to the perfume.</li>
+                                                            </ul>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td align="center" style="background-color: #F8F9FA; padding: 30px; border-top: 1px solid #DADCE0;">
+                        <p style="margin: 0; font-family: Roboto, Helvetica, Arial, sans-serif; font-size: 12px; color: #5F6368;">Disclaimer: The content analysis for opportunities are done using only the audio of the content. The timestamps of the opportunities are rough indicators, not exact.</p>
+                    </td>
+                </tr>
+
+            </table>
+            </td>
+    </tr>
+</table>
+</body>
+</html>
