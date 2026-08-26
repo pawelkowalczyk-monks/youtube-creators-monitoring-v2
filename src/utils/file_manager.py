@@ -364,3 +364,162 @@ class FileManager:
         except Exception as e:
             print(f"Error fetching latest video for {channel_url}: {e}")
         return None
+
+    @staticmethod
+    def get_videos_last_week(channel_url):
+        """
+        Fetches all long-form videos uploaded by a YouTube channel in the last 7 days.
+        """
+        import yt_dlp
+        import datetime
+        url = channel_url.rstrip('/')
+        if not url.endswith('/videos'):
+            url += '/videos'
+        
+        ydl_opts = {
+            'playlist_items': '10',
+            'extract_flat': True,
+            'quiet': True,
+            'no_warnings': True,
+            'extractor_args': {
+                'youtube': {
+                    'player_client': ['android', 'web'],
+                    'skip': ['webpage', 'hls']
+                }
+            },
+            'http_headers': {
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+                'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
+                'Accept-Language': 'fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7',
+            }
+        }
+        
+        matching_videos = []
+        today = datetime.date.today()
+        one_week_ago = today - datetime.timedelta(days=7)
+        
+        try:
+            with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+                info = ydl.extract_info(url, download=False)
+                if 'entries' in info:
+                    for entry in info['entries']:
+                        upload_date_str = entry.get('upload_date')
+                        video_url = entry.get('url') or f"https://www.youtube.com/watch?v={entry.get('id')}"
+                        
+                        if not upload_date_str:
+                            try:
+                                single_opts = {
+                                    'quiet': True,
+                                    'no_warnings': True,
+                                    'extract_flat': True,
+                                }
+                                with yt_dlp.YoutubeDL(single_opts) as s_ydl:
+                                    s_info = s_ydl.extract_info(video_url, download=False)
+                                    upload_date_str = s_info.get('upload_date')
+                            except Exception:
+                                pass
+                                
+                        if upload_date_str:
+                            try:
+                                upload_date = datetime.datetime.strptime(upload_date_str, "%Y%m%d").date()
+                                if one_week_ago <= upload_date <= today:
+                                    matching_videos.append({
+                                        'url': video_url,
+                                        'title': entry.get('title'),
+                                        'id': entry.get('id'),
+                                        'upload_date': upload_date.strftime("%Y-%m-%d")
+                                    })
+                            except ValueError:
+                                pass
+        except Exception as e:
+            print(f"Error fetching last week videos for {channel_url}: {e}")
+        return matching_videos
+
+    @staticmethod
+    def get_channel_videos_for_timeframe(channel_url, timeframe="Last Week"):
+        """
+        Fetches channel videos based on selected timeframe: 'Last Week', 'Last Month', or 'Last Video'.
+        """
+        import yt_dlp
+        import datetime
+        url = channel_url.rstrip('/')
+        if not url.endswith('/videos'):
+            url += '/videos'
+            
+        # If last video, we only need 1 item, otherwise up to 30 to scan for date thresholds
+        playlist_items_limit = '1' if timeframe == "Last Video" else '30'
+        
+        ydl_opts = {
+            'playlist_items': playlist_items_limit,
+            'extract_flat': True,
+            'quiet': True,
+            'no_warnings': True,
+            'extractor_args': {
+                'youtube': {
+                    'player_client': ['android', 'web'],
+                    'skip': ['webpage', 'hls']
+                }
+            },
+            'http_headers': {
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, http_headers)',
+                'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
+                'Accept-Language': 'fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7',
+            }
+        }
+        
+        matching_videos = []
+        today = datetime.date.today()
+        
+        if timeframe == "Last Week":
+            date_limit = today - datetime.timedelta(days=7)
+        elif timeframe == "Last Month":
+            date_limit = today - datetime.timedelta(days=30)
+        else:
+            date_limit = None # No date limit needed for 'Last Video'
+            
+        try:
+            with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+                info = ydl.extract_info(url, download=False)
+                if 'entries' in info and len(info['entries']) > 0:
+                    if timeframe == "Last Video":
+                        entry = info['entries'][0]
+                        video_url = entry.get('url') or f"https://www.youtube.com/watch?v={entry.get('id')}"
+                        matching_videos.append({
+                            'url': video_url,
+                            'title': entry.get('title'),
+                            'id': entry.get('id'),
+                            'upload_date': "Latest"
+                        })
+                    else:
+                        for entry in info['entries']:
+                            upload_date_str = entry.get('upload_date')
+                            video_url = entry.get('url') or f"https://www.youtube.com/watch?v={entry.get('id')}"
+                            
+                            if not upload_date_str:
+                                try:
+                                    single_opts = {
+                                        'quiet': True,
+                                        'no_warnings': True,
+                                        'extract_flat': True,
+                                    }
+                                    with yt_dlp.YoutubeDL(single_opts) as s_ydl:
+                                        s_info = s_ydl.extract_info(video_url, download=False)
+                                        upload_date_str = s_info.get('upload_date')
+                                except Exception:
+                                    pass
+                                    
+                            if upload_date_str:
+                                try:
+                                    upload_date = datetime.datetime.strptime(upload_date_str, "%Y%m%d").date()
+                                    if date_limit <= upload_date <= today:
+                                        matching_videos.append({
+                                            'url': video_url,
+                                            'title': entry.get('title'),
+                                            'id': entry.get('id'),
+                                            'upload_date': upload_date.strftime("%Y-%m-%d")
+                                        })
+                                except ValueError:
+                                    pass
+        except Exception as e:
+            print(f"Error fetching channel videos for timeframe {timeframe} from {channel_url}: {e}")
+        return matching_videos

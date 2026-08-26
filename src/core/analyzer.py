@@ -113,11 +113,14 @@ class AnalyzerAgent:
                         
                     # Find creator name
                     creator_name = "Unknown Creator"
-                    # Try to find in the creators list
-                    for c in parsed_data.get("creators", []):
-                        if c["url"] == link or link == c.get("video_url") or c["name"].lower() in str(c).lower():
-                            creator_name = c["name"]
-                            break
+                    if "video_to_creator" in parsed_data and link in parsed_data["video_to_creator"]:
+                        creator_name = parsed_data["video_to_creator"][link]
+                    else:
+                        # Try to find in the creators list
+                        for c in parsed_data.get("creators", []):
+                            if c.get("url") == link or link == c.get("video_url"):
+                                creator_name = c["name"]
+                                break
                     
                     time_range = time_ranges.get(link, None) if time_ranges else None
                     print(f"  - ▶️ Processing video {i}/{len(selected_videos)}: {link}")

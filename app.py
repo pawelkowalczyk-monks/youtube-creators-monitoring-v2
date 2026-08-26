@@ -209,6 +209,12 @@ if 'target_video_url' not in st.session_state:
     st.session_state.target_video_url = ""
 if 'target_creator_name' not in st.session_state:
     st.session_state.target_creator_name = ""
+if 'watchlist_selected_creators' not in st.session_state:
+    st.session_state.watchlist_selected_creators = []
+if 'watchlist_fetched_videos' not in st.session_state:
+    st.session_state.watchlist_fetched_videos = []
+if 'global_watchlist_feed' not in st.session_state:
+    st.session_state.global_watchlist_feed = None
 
 # Handle environment key overrides
 if st.session_state.api_key_override:
@@ -410,42 +416,174 @@ if st.session_state.active_step == 'Step 1':
 # -----------------------------------------------------------------------------
 elif st.session_state.active_step == 'Step 2' and is_clist:
     st.markdown('### 🎥 Creator Watchlist G.E.O. Video Slicer')
-    st.write('Scan your co-marketing partners, pull their latest visual segments, download speech audio, and draft French G.E.O. Action Plans.')
+    st.write('Scan your co-marketing partners, pull their videos uploaded recently, down-sample their speech tracks, and draft French G.E.O. Action Plans.')
     
+    # GLOBAL WATCHLIST UPLOAD FEED DISCOVERY BUTTON
+    st.markdown('<div class="section-header">📡 Global Watchlist Upload Feed Checker</div>', unsafe_allow_html=True)
+    st.write("Check who among all co-marketing partners posted recently. This retrieves the top 5 closest videos to current day across the entire watchlist database.")
+    
+    if st.button("📡 Check All Creators for Recent Uploads", type="secondary", use_container_width=True):
+        st.session_state.global_watchlist_feed = []
+        creators_list = p_data.get('creators', [])
+        
+        if not creators_list:
+            st.warning("No creators loaded in watchlist.")
+        else:
+            with st.spinner("Scraping absolute latest upload details across entire partner list (this may take a few seconds)..."):
+                scanned_videos = []
+                progress_feed = st.progress(0)
+                status_feed = st.empty()
+                
+                for idx, creator in enumerate(creators_list):
+                    c_name = creator["name"]
+                    status_feed.write(f"Scraping latest upload for **{c_name}**...")
+                    latest_vid = FileManager.get_channel_videos_for_timeframe(creator["url"], "Last Video")
+                    if latest_vid:
+                        vid_item = latest_vid[0]
+                        vid_item["creator_name"] = c_name
+                        scanned_videos.append(vid_item)
+                    progress_feed.progress((idx + 1) / len(creators_list))
+                
+                progress_feed.empty()
+                status_feed.empty()
+                
+                # Retrieve the absolute upload dates for accurate sorting
+                # Let's fetch details to get exact upload_dates (YYYYMMDD) using yt-dlp where possible
+                vids_with_dates = []
+                import yt_dlp
+                import datetime
+                
+                status_feed.write("Sorting and filtering top 5 most recent uploads...")
+                for vid in scanned_videos:
+                    video_url = vid["url"]
+                    # Fetch date if YYYYMMDD is not parsed
+                    try:
+                        ydl_opts_date = {'quiet': True, 'no_warnings': True, 'extract_flat': True}
+                        with yt_dlp.YoutubeDL(ydl_opts_date) as ydl_d:
+                            s_info = ydl_d.extract_info(video_url, download=False)
+                            upload_date_str = s_info.get('upload_date')
+                            if upload_date_str:
+                                upload_date = datetime.datetime.strptime(upload_date_str, "%Y%m%d").date()
+                                vid["date_object"] = upload_date
+                                vid["upload_date"] = upload_date.strftime("%Y-%m-%d")
+                            else:
+                                vid["date_object"] = datetime.date.min
+                                vid["upload_date"] = "Unknown"
+                    except Exception:
+                        vid["date_object"] = datetime.date.min
+                        vid["upload_date"] = "Unknown"
+                    vids_with_dates.append(vid)
+                
+                status_feed.empty()
+                
+                # Sort by date descending (closest to today first)
+                vids_with_dates.sort(key=lambda x: x.get("date_object", datetime.date.min), reverse=True)
+                st.session_state.global_watchlist_feed = vids_with_dates[:5]
+                st.rerun()
+
+    # If results are cached in state, show them beautifully
+    g_feed = st.session_state.get("global_watchlist_feed")
+    if g_feed:
+        st.markdown("##### 📡 Scanned Top 5 Recent Videos (Watchlist Feed):")
+        for idx, vid in enumerate(g_feed, 1):
+            col_feed_text, col_feed_act = st.columns([4, 1])
+            with col_feed_text:
+                st.markdown(f"**{idx}. {vid['creator_name']}** — *\"{vid['title']}\"*")
+                st.caption(f"📅 Published Date: `{vid['upload_date']}` | Link: {vid['url']}")
+            with col_feed_act:
+                # Button to quickly add/queue this video
+                if st.button("➕ Queue Video", key=f"feed_add_btn_{idx}_{vid['id']}", use_container_width=True):
+                    # Check if already added to avoid duplicates
+                    if not any(v['url'] == vid['url'] for v in st.session_state.watchlist_fetched_videos):
+                        st.session_state.watchlist_fetched_videos.append({
+                            "url": vid['url'],
+                            "title": vid['title'],
+                            "id": vid['id'],
+                            "creator_name": vid['creator_name'],
+                            "upload_date": vid['upload_date']
+                        })
+                        # Auto-select creator in multiselect if not present
+                        if vid['creator_name'] not in st.session_state.watchlist_selected_creators:
+                            st.session_state.watchlist_selected_creators.append(vid['creator_name'])
+                        st.success(f"Added to Queue!")
+                    else:
+                        st.info("Video is already in your Queue!")
+        st.markdown("---")
+        
     col_setup_left, col_setup_right = st.columns([1.2, 1])
     
     with col_setup_left:
-        st.markdown('<div class="section-header">👥 Creator Watchlist Target & Down-sampling Options</div>', unsafe_allow_html=True)
+        st.markdown('<div class="section-header">👥 1. Watchlist Target Selection</div>', unsafe_allow_html=True)
         creators = p_data.get('creators', [])
         creator_names = [c['name'] for c in creators]
         
-        curr_creator_name = st.session_state.target_creator_name
-        def_idx = 0
-        if curr_creator_name in creator_names:
-            def_idx = creator_names.index(curr_creator_name)
-            
-        selected_creator_name = st.selectbox('Choose creator from monitored watchlist:', options=creator_names, index=def_idx)
-        creator_info = next((c for c in creators if c['name'] == selected_creator_name), None)
+        # Timeframe Selector dropdown
+        selected_timeframe = st.selectbox(
+            'Select analysis timeframe:',
+            options=['Last Week', 'Last Month', 'Last Video'],
+            index=0,
+            key='watchlist_timeframe_selector'
+        )
         
-        if creator_info:
-            st.info(f'👤 **{creator_info["name"]}** ({creator_info["type"]}) | Vertical: {creator_info["vertical"]}')
-            
-            if st.button('🔍 Fetch Latest Video Details', type='secondary', use_container_width=True):
-                with st.spinner(f'Scraping YouTube for {creator_info["name"]}...'):
-                    video_info = FileManager.get_latest_video(creator_info["url"])
-                    if video_info:
-                        st.session_state.target_video_url = video_info['url']
-                        st.session_state.target_creator_name = creator_info['name']
-                        st.success(f'Fetched latest video: "{video_info["title"]}"')
-                    else:
-                        st.error('Failed to fetch latest video. Check connection or channel URL.')
-                        
-        manual_url = st.text_input('YouTube URL Override:', value=st.session_state.target_video_url)
-        if manual_url != st.session_state.target_video_url:
-            st.session_state.target_video_url = manual_url
-            if not st.session_state.target_creator_name:
-                st.session_state.target_creator_name = 'Custom Target'
+        # Stateful Multiselect of Creators
+        selected_creators = st.multiselect(
+            f'Choose creators to monitor content ({selected_timeframe.lower()}):',
+            options=creator_names,
+            default=st.session_state.watchlist_selected_creators
+        )
+        st.session_state.watchlist_selected_creators = selected_creators
+        
+        # Action button to fetch all videos from chosen timeframe
+        if st.button(f"🔍 Fetch Videos ({selected_timeframe})", type="primary", use_container_width=True):
+            if not selected_creators:
+                st.warning("⚠️ Please select at least one creator first!")
+            else:
+                st.session_state.watchlist_fetched_videos = []
+                progress_bar = st.progress(0)
+                status_text = st.empty()
                 
+                for idx, c_name in enumerate(selected_creators):
+                    creator_info = next((c for c in creators if c['name'] == c_name), None)
+                    if creator_info:
+                        status_text.write(f"Scraping YouTube videos for **{c_name}** ({selected_timeframe.lower()})...")
+                        fetched = FileManager.get_channel_videos_for_timeframe(creator_info["url"], selected_timeframe)
+                        for v in fetched:
+                            v["creator_name"] = c_name
+                            st.session_state.watchlist_fetched_videos.append(v)
+                    progress_bar.progress((idx + 1) / len(selected_creators))
+                
+                progress_bar.empty()
+                status_text.empty()
+                
+                num_found = len(st.session_state.watchlist_fetched_videos)
+                time_range_desc = "the past 7 days" if selected_timeframe == "Last Week" else "the past 30 days" if selected_timeframe == "Last Month" else "latest upload"
+                if num_found > 0:
+                    st.success(f"🎉 Successfully retrieved {num_found} video(s) uploaded in {time_range_desc}!")
+                else:
+                    st.warning(f"⚠️ No videos were uploaded in {time_range_desc} by the selected creators.")
+        
+        # Manual Override Add
+        st.markdown('<div class="section-header">⚙️ Manual Video Addition</div>', unsafe_allow_html=True)
+        col_man1, col_man2 = st.columns([2, 1])
+        with col_man1:
+            manual_url = st.text_input("YouTube Video URL Override:", key="man_video_url_u")
+        with col_man2:
+            manual_name = st.text_input("Creator Name:", key="man_creator_name_u")
+            
+        if st.button("➕ Add Manual Video to Queue", use_container_width=True):
+            if not manual_url:
+                st.error("Please provide a valid YouTube URL.")
+            else:
+                st.session_state.watchlist_fetched_videos.append({
+                    "url": manual_url,
+                    "title": f"Manual Override: {manual_url[:30]}...",
+                    "id": manual_url.split("v=")[-1] if "v=" in manual_url else "manual",
+                    "creator_name": manual_name or "Custom Target",
+                    "upload_date": datetime.date.today().strftime("%Y-%m-%d")
+                })
+                st.success("Successfully added manual video to queue!")
+                st.rerun()
+
         # CONSOLIDATED: Slicing options moved inside an elegant advanced options expander
         with st.expander('⚙️ Advanced Audio-Slicing & Extraction Settings', expanded=False):
             audio_only = st.checkbox('Extract and Analyze Audio-Only', value=True)
@@ -467,18 +605,28 @@ elif st.session_state.active_step == 'Step 2' and is_clist:
         st.markdown('<div class="section-header">🚀 Pipeline Execution Workstation</div>', unsafe_allow_html=True)
         st.write('Ready to trigger the automated scraping and intelligence pipeline. This will locally extract creator audio and analyze segments with Gemini.')
         
-        has_target = bool(st.session_state.target_video_url)
-        if has_target:
-            st.success(f'''
-            👉 **Current Scheduled Target:**
-            - **Creator:** {st.session_state.target_creator_name}
-            - **Video Link:** {st.session_state.target_video_url}
-            ''')
+        # Display Queued Videos
+        queued_videos = st.session_state.watchlist_fetched_videos
+        
+        if queued_videos:
+            st.markdown(f"##### 📊 Queued Targets for Analysis ({len(queued_videos)}):")
+            
+            # Show in a nice dataframe
+            df_queue = pd.DataFrame(queued_videos)
+            st.dataframe(df_queue[['creator_name', 'title', 'upload_date']], use_container_width=True, hide_index=True)
+            
+            if st.button("🧹 Clear Target Video Queue", type="secondary"):
+                st.session_state.watchlist_fetched_videos = []
+                st.rerun()
+        else:
+            st.info("💡 Your video queue is empty. Choose creators and fetch their last week's uploads, or add overrides to begin!")
+            
+        has_target = len(queued_videos) > 0
         
         if not Config.GOOGLE_API_KEY:
             st.error('❌ Google API Key is missing. Set it in the sidebar.')
         elif not has_target:
-            st.warning('💡 Click "Fetch Latest Video Details" or enter an URL Override to begin!')
+            st.warning('💡 Select creators and click "Fetch Videos from Last Week" to populate queue!')
         else:
             run_btn = st.button('🚀 EXECUTE GEMINI INTELLIGENCE PIPELINE', type='primary', use_container_width=True)
             
@@ -498,8 +646,13 @@ elif st.session_state.active_step == 'Step 2' and is_clist:
                 with st.spinner('Processing pipeline segments...'):
                     live_logger('🚀 Starting G.E.O. Multi-Modal Watchlist Pipeline...')
                     
-                    selected_v_list = [st.session_state.target_video_url]
-                    time_ranges = {st.session_state.target_video_url: (0, duration_limit_sec) if duration_limit_sec else None}
+                    selected_v_list = [v['url'] for v in queued_videos]
+                    
+                    # Create the video_to_creator mapping
+                    p_data["video_to_creator"] = {v['url']: v['creator_name'] for v in queued_videos}
+                    
+                    # Set up time ranges for each video
+                    time_ranges = {v['url']: (0, duration_limit_sec) if duration_limit_sec else None for v in queued_videos}
                     
                     try:
                         analyzer = AnalyzerAgent(log_callback=live_logger, enable_rich_progress=False)
@@ -532,14 +685,19 @@ elif st.session_state.active_step == 'Step 2' and is_clist:
                             newsletter_agent = NewsletterAgent()
                             html_output = newsletter_agent.generate_html(st.session_state.analysis_result)
                             
+                            # Dynamic compiled filename
                             date_str = datetime.datetime.now().strftime('%Y-%m-%d-%H%M')
-                            out_filename = f"GEO-Action-Plan-{st.session_state.target_creator_name.replace(' ', '_')}-{date_str}.html"
+                            if len(selected_creators) == 1:
+                                out_filename = f"GEO-Action-Plan-{selected_creators[0].replace(' ', '_')}-{date_str}.html"
+                            else:
+                                out_filename = f"GEO-Action-Plan-Batch-{date_str}.html"
+                                
                             out_path = os.path.join(Config.OUTPUT_DIR, out_filename)
                             
                             with open(out_path, 'w', encoding='utf-8') as f_out:
                                 f_out.write(html_output)
                                 
-                            st.success(f'📬 Layout compiled to: ')
+                            st.success(f'📬 Layout compiled to: {out_path}')
                             st.balloons()
                             time.sleep(2)
                             
