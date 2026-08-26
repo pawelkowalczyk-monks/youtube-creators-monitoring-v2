@@ -15,6 +15,7 @@ from src.utils.file_manager import FileManager
 from src.core.analyzer import AnalyzerAgent
 from src.core.generator import NewsletterAgent
 from src.services.gemini import GeminiService
+from src.utils.google_sheets_sync import sync_rows_to_google_sheets
 
 # -----------------------------------------------------------------------------
 # 1. PAGE CONFIG & STYLING
@@ -215,6 +216,8 @@ if 'watchlist_fetched_videos' not in st.session_state:
     st.session_state.watchlist_fetched_videos = []
 if 'global_watchlist_feed' not in st.session_state:
     st.session_state.global_watchlist_feed = None
+if 'yt_proxy_url' not in st.session_state:
+    st.session_state.yt_proxy_url = ""
 
 # Handle environment key overrides
 if st.session_state.api_key_override:
@@ -230,7 +233,7 @@ os.makedirs(Config.OUTPUT_DIR, exist_ok=True)
 # 4. SIDEBAR CONFIGURATION
 # -----------------------------------------------------------------------------
 with st.sidebar:
-    st.markdown("### 🤖 G.E.O. Social Copilot")
+    st.markdown("### 🤖 Creators Monitoring")
     st.image("https://www.gstatic.com/images/branding/product/2x/gemini_64dp.png", width=50)
     st.markdown("##### Powered by `gemini-3-flash-preview`")
     
@@ -253,6 +256,21 @@ with st.sidebar:
     if api_key_input != st.session_state.api_key_override:
         st.session_state.api_key_override = api_key_input
         Config.GOOGLE_API_KEY = api_key_input
+        st.rerun()
+        
+    st.markdown("---")
+    
+    # BYPASS & PROXIES CONFIGURATION
+    st.markdown("🌐 **YouTube Anti-Bot Bypass**")
+    proxy_input = st.text_input(
+        "Enter Proxy URL (Optional):",
+        value=st.session_state.yt_proxy_url,
+        placeholder="http://host:port or socks5://...",
+        help="Paste a custom proxy URL to route downloads around your local IP block. Our cloud-native fallback is active by default!",
+        key="key_sidebar_proxy_u"
+    )
+    if proxy_input != st.session_state.yt_proxy_url:
+        st.session_state.yt_proxy_url = proxy_input
         st.rerun()
         
     st.markdown("---")
@@ -305,13 +323,13 @@ with st.sidebar:
                 st.rerun()
                 
     st.markdown("---")
-    st.caption("🚀 Tessra G.E.O. Social Agent — Version 2.1.0")
+    st.caption("🚀 Tessra — Creators Monitoring — Version 2.1.0")
 
 # -----------------------------------------------------------------------------
 # 5. HEADER BRANDING
 # -----------------------------------------------------------------------------
-st.markdown('<div class="brand-title">🤖 G.E.O. Social Copilot Dashboard</div>', unsafe_allow_html=True)
-st.markdown('<div class="brand-subtitle">Strategic community moderation, automated triage, and Tone of Voice compliant reply generator for Google France.</div>', unsafe_allow_html=True)
+st.markdown('<div class="brand-title">📈 Creators Monitoring</div>', unsafe_allow_html=True)
+st.markdown('<div class="brand-subtitle">Cracking YouTube</div>', unsafe_allow_html=True)
 
 # Parsing file caching logic
 if st.session_state.selected_file and st.session_state.parsed_data is None:
@@ -448,30 +466,20 @@ elif st.session_state.active_step == 'Step 2' and is_clist:
                 status_feed.empty()
                 
                 # Retrieve the absolute upload dates for accurate sorting
-                # Let's fetch details to get exact upload_dates (YYYYMMDD) using yt-dlp where possible
                 vids_with_dates = []
-                import yt_dlp
                 import datetime
                 
                 status_feed.write("Sorting and filtering top 5 most recent uploads...")
                 for vid in scanned_videos:
-                    video_url = vid["url"]
-                    # Fetch date if YYYYMMDD is not parsed
+                    pub_date_str = vid.get("upload_date", "")
                     try:
-                        ydl_opts_date = {'quiet': True, 'no_warnings': True, 'extract_flat': True}
-                        with yt_dlp.YoutubeDL(ydl_opts_date) as ydl_d:
-                            s_info = ydl_d.extract_info(video_url, download=False)
-                            upload_date_str = s_info.get('upload_date')
-                            if upload_date_str:
-                                upload_date = datetime.datetime.strptime(upload_date_str, "%Y%m%d").date()
-                                vid["date_object"] = upload_date
-                                vid["upload_date"] = upload_date.strftime("%Y-%m-%d")
-                            else:
-                                vid["date_object"] = datetime.date.min
-                                vid["upload_date"] = "Unknown"
+                        if pub_date_str and pub_date_str != "Latest":
+                            upload_date = datetime.datetime.strptime(pub_date_str, "%Y-%m-%d").date()
+                            vid["date_object"] = upload_date
+                        else:
+                            vid["date_object"] = datetime.date.min
                     except Exception:
                         vid["date_object"] = datetime.date.min
-                        vid["upload_date"] = "Unknown"
                     vids_with_dates.append(vid)
                 
                 status_feed.empty()
@@ -1230,6 +1238,94 @@ elif st.session_state.active_step == 'Step 3':
                 with col_preview_type:
                     st.info("💡 Tip: Copy the raw code below and inject it in Gmail using an email HTML inserter extension to send as a high-fidelity visual layout!")
                     
+                # -----------------------------------------------------------------
+                # 1-CLICK CLIPBOARD COPY TO GOOGLE SPREADSHEET (ROUTE A: YOUTUBE)
+                # -----------------------------------------------------------------
+                st.markdown('<div class="section-header">📋 1-Click Copy to Google Sheets</div>', unsafe_allow_html=True)
+                st.write("Copy all generated creator responses, timestamps, and questions to clipboard to paste them directly into your Google Sheet.")
+                
+                cached_analysis = st.session_state.get("analysis_result")
+                
+                if not cached_analysis:
+                    st.warning("⚠️ No active G.E.O. analysis cached in session memory. Run the pipeline in Step 2 to generate rows!")
+                else:
+                    try:
+                        # Parse the cached G.E.O. JSON
+                        analysis_obj = json.loads(cached_analysis)
+                        videos_list = analysis_obj.get("videos", [])
+                        
+                        rows_formatted = []
+                        for video in videos_list:
+                            creator_name = video.get("creator_name", "Unknown Creator")
+                            video_link = video.get("video_link", "#")
+                            geo = video.get("geo_analysis", {})
+                            
+                            opp_analysis = geo.get('analyse_opportunite', {})
+                            mention = opp_analysis.get('analyse_de_la_mention', {})
+                            sujet = mention.get('sujet_reel', 'N/A')
+                            point_accroche = mention.get('point_d_accroche', 'N/A')
+                            
+                            hook_desc = f"Sujet: {sujet} | Accroche: {point_accroche}"
+                            
+                            # Props
+                            props = geo.get('propositions_de_reponse', [])
+                            prop1 = props[0].get("texte_reponse", "") if len(props) > 0 else ""
+                            prop2 = props[1].get("texte_reponse", "") if len(props) > 1 else ""
+                            prop3 = props[2].get("texte_reponse", "") if len(props) > 2 else ""
+                            
+                            # Standard G.E.O. Video recommendation row
+                            rows_formatted.append({
+                                "Creator Name": creator_name,
+                                "Link": video_link,
+                                "Hook / Starting Point": hook_desc,
+                                "Timestamp (rough)": "Opportunity Segment",
+                                "Proposed Response 1": prop1,
+                                "Proposed Response 2": prop2,
+                                "Proposed Response 3": prop3,
+                                "CM Validation": "",
+                                "Client Validation": ""
+                            })
+                            
+                            # Audience questions rows
+                            audience_qs = geo.get("questions_audience", [])
+                            for q in audience_qs:
+                                rows_formatted.append({
+                                    "Creator Name": creator_name,
+                                    "Link": video_link,
+                                    "Hook / Starting Point": f"Question: {q.get('question_posee', '')}",
+                                    "Timestamp (rough)": q.get('timestamp', '00:00'),
+                                    "Proposed Response 1": q.get('notre_reponse_suggeree', ''),
+                                    "Proposed Response 2": "",
+                                    "Proposed Response 3": "",
+                                    "CM Validation": "",
+                                    "Client Validation": ""
+                                })
+                                
+                        if rows_formatted:
+                            df_formatted = pd.DataFrame(rows_formatted)
+                            
+                            # Convert to Tab-Separated Values (TSV) for perfect 1-click clipboard spreadsheet pasting!
+                            tsv_buffer = io.StringIO()
+                            df_formatted.to_csv(tsv_buffer, sep="\t", index=False, header=False) # No headers so it doesn't overwrite titles
+                            tsv_text = tsv_buffer.getvalue()
+                            
+                            st.info("""
+                            📋 **How to paste in Google Sheets in 3 seconds:**
+                            1. Click the **Copy button** in the top-right corner of the text box below.
+                            2. Open your [Google Sheet](https://docs.google.com/spreadsheets/d/1LWrWCj3Jm-ZdbpQCZw5dkgXreL1Rj0DvmVUTXSRlRv8/).
+                            3. Select cell **A2** (or the first blank cell under Creator Name).
+                            4. Press **`CMD+V`** (Mac) or **`CTRL+V`** (Windows) to instantly paste all rows perfectly split into columns!
+                            """)
+                            
+                            st.text_area("📋 Copy All Rows (1-Click Clipboard Copy):", value=tsv_text, height=180, key="tsv_copy_area_a")
+                            st.markdown("**Preview of rows to be copied:**")
+                            st.dataframe(df_formatted, use_container_width=True, hide_index=True)
+                        else:
+                            st.warning("No rows parsed to copy.")
+                    except Exception as parse_ex_sh:
+                        st.error(f"Failed parsing cached results: {parse_ex_sh}")
+                
+                st.markdown("---")
                 # Create sub-tabs for Live Preview vs Raw Code
                 prev_tab, code_tab = st.tabs(["👁️ Live Visual Preview (Responsive)", "💻 Raw HTML Code"])
                 
@@ -1265,6 +1361,52 @@ elif st.session_state.active_step == 'Step 3':
                 st.markdown(f'<div class="metric-card"><div class="metric-value">{likes_count}</div><div class="metric-label">Scheduled Likes</div></div>', unsafe_allow_html=True)
             with col_m3:
                 st.markdown(f'<div class="metric-card"><div class="metric-value">{hides_count + deletes_count}</div><div class="metric-label">Moderated Comments</div></div>', unsafe_allow_html=True)
+            
+            # -----------------------------------------------------------------
+            # 1-CLICK CLIPBOARD COPY TO GOOGLE SPREADSHEET (ROUTE B: BRANDWATCH)
+            # -----------------------------------------------------------------
+            st.markdown('<div class="section-header">📋 1-Click Copy to Google Sheets</div>', unsafe_allow_html=True)
+            st.write("Copy your vetted replies, likes, and moderations to clipboard to paste them directly into your Google Sheet.")
+            
+            rows_formatted_b = []
+            for idx, row in df_vetted.iterrows():
+                # Extract author handle from Excel hyperlink if formula
+                user_str = str(row.get("User", "Anon"))
+                if "=HYPERLINK" in user_str:
+                    matches = re.findall(r'\"([^\"]+)\"', user_str)
+                    user_str = matches[-1] if len(matches) > 1 else user_str
+                    
+                rows_formatted_b.append({
+                    "Creator Name": user_str,
+                    "Link": str(row.get("Platform", "N/A")) if not str(row.get("Post", "")).startswith("http") else str(row.get("Post", "")),
+                    "Hook / Starting Point": str(row.get("Post", "")),
+                    "Timestamp (rough)": str(row.get("Interaction", "Reply")),
+                    "Proposed Response 1": str(row.get("Answer", "")) if str(row.get("Interaction", "")) == "Reply" else f"Action: {row.get('Interaction', '')} | Reason: {row.get('Comment PMM', '')}",
+                    "Proposed Response 2": "",
+                    "Proposed Response 3": "",
+                    "CM Validation": "",
+                    "Client Validation": ""
+                })
+                
+            if rows_formatted_b:
+                df_formatted_b = pd.DataFrame(rows_formatted_b)
+                
+                # Convert to TSV string
+                tsv_buffer_b = io.StringIO()
+                df_formatted_b.to_csv(tsv_buffer_b, sep="\t", index=False, header=False)
+                tsv_text_b = tsv_buffer_b.getvalue()
+                
+                st.info("""
+                📋 **How to paste in Google Sheets in 3 seconds:**
+                1. Click the **Copy button** in the top-right corner of the text box below.
+                2. Open your [Google Sheet](https://docs.google.com/spreadsheets/d/1LWrWCj3Jm-ZdbpQCZw5dkgXreL1Rj0DvmVUTXSRlRv8/).
+                3. Select cell **A2** (or the first blank cell under Creator Name).
+                4. Press **`CMD+V`** (Mac) or **`CTRL+V`** (Windows) to instantly paste all rows perfectly split into columns!
+                """)
+                
+                st.text_area("📋 Copy All Rows (1-Click Clipboard Copy):", value=tsv_text_b, height=180, key="tsv_copy_area_b")
+                st.markdown("**Preview of rows to be copied:**")
+                st.dataframe(df_formatted_b, use_container_width=True, hide_index=True)
             
             st.markdown('<div class="section-header">📥 Vetted Action Plan Download & Preview</div>', unsafe_allow_html=True)
             

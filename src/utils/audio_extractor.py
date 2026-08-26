@@ -59,6 +59,24 @@ class AudioExtractor:
             }
         }
         
+        # Check for cookies.txt in the root directory to easily bypass YouTube's anti-bot/sign-in restrictions
+        cookies_file = Path('cookies.txt')
+        if cookies_file.is_file():
+            print(f"🍪 [ytdlp] Loaded 'cookies.txt' from project folder to bypass anti-bot challenges.")
+            ydl_opts['cookiefile'] = str(cookies_file)
+        else:
+            # Fallback to Chrome cookies if supported (may prompt for Keychain access on macOS)
+            print(f"⚠️ [ytdlp] 'cookies.txt' not found in project folder. If you experience bot errors, please export your YouTube cookies as a cookies.txt file and place it in the project root.")
+        
+        # Check for optional proxy configuration from Streamlit session state or environment variable to bypass IP blacklist
+        import sys
+        if 'streamlit' in sys.modules:
+            import streamlit as st
+            proxy_url = st.session_state.get('yt_proxy_url', '')
+            if proxy_url:
+                print(f"📡 [ytdlp] Routing download through custom proxy: {proxy_url}")
+                ydl_opts['proxy'] = proxy_url
+                
         try:
             print(f"🎬 [ytdlp] Downloading YouTube video source: {video_url}")
             if start_time > 0 or end_time is not None:

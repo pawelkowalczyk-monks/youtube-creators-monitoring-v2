@@ -230,6 +230,15 @@ Ta mission est d'analyser ce contenu audio d'un créateur français et d'identif
 - Tout commentaire (texte_reponse) doit STRICTEMENT faire moins de 100 caractères (emojis compris).
 - Tu dois impérativement générer trois propositions de commentaires pour la persona retenue.
 
+● QUESTIONS POSÉES AU PUBLIC & APPELS À L'ACTION :
+- Tu dois également analyser attentivement l'audio pour identifier les questions posées par le créateur à son public (ex: appels à l'action comme "dites-moi dans les commentaires", questions ouvertes, ou réflexions laissées sans réponse au cours de la vidéo).
+- Identifie un maximum de 3 questions de ce type. Remplis-les dans le tableau 'questions_audience'.
+- S'il n'y a aucune question de ce type, retourne un tableau vide [] pour 'questions_audience'.
+- Pour chaque question, remplis les clés JSON suivantes :
+  - 'question_posee' : La question posée par le créateur en français.
+  - 'timestamp' : Le code temporel exact (ex: "02:15") au format MM:SS.
+  - 'notre_reponse_suggeree' : Notre suggestion de réponse chaleureuse, drôle, humble mais sûre d'elle (avec du swagger), utilisant exclusivement le "nous" (pas de je/moi/mon), faisant STRICTEMENT moins de 100 caractères, et typique de la tonalité Google.
+
 Analyse l'audio suivant et remplis la structure JSON demandée.
 """
 

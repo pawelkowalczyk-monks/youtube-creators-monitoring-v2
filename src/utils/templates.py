@@ -337,6 +337,36 @@ class TemplateFiller:
                 
             props_combined = "\n".join(props_html)
             
+            # Build Creator Audience Questions section
+            questions_html = ""
+            questions_list = geo.get('questions_audience', [])
+            if questions_list:
+                q_items_html = []
+                for q_item in questions_list:
+                    q_text = q_item.get('question_posee', '')
+                    q_time = q_item.get('timestamp', '')
+                    q_ans = q_item.get('notre_reponse_suggeree', '')
+                    
+                    q_block = f'''
+                    <div class="question-item">
+                        <div class="question-title">
+                            ❓ {q_text} <span class="question-timestamp">⏱️ {q_time}</span>
+                        </div>
+                        <div class="question-answer">
+                            💬 <b>Réponse Google France suggérée :</b> « {q_ans} »
+                        </div>
+                    </div>
+                    '''
+                    q_items_html.append(q_block)
+                
+                q_combined_items = "\n".join(q_items_html)
+                questions_html = f'''
+                <div class="section-title" style="margin-top:25px;">🎙️ QUESTIONS POSÉES AU PUBLIC & APPELS À L'ACTION</div>
+                <div class="questions-box">
+                    {q_combined_items}
+                </div>
+                '''
+            
             card = f'''
             <div class="card">
                 <div class="card-header">
@@ -361,6 +391,8 @@ class TemplateFiller:
                     <div class="propositions">
                         {props_combined}
                     </div>
+                    
+                    {questions_html}
                 </div>
             </div>
             '''

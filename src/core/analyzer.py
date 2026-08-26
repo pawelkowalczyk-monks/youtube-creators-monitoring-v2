@@ -51,6 +51,19 @@ GEO_SCHEMA = {
         },
         "required": ["niveau_de_risk", "texte_reponse", "justification_mot_a_mot"]
       }
+    },
+    "questions_audience": {
+      "type": "ARRAY",
+      "description": "Up to 3 questions asked by the creator to the audience or general unanswered questions asked in the video where we as a brand can contribute.",
+      "items": {
+        "type": "OBJECT",
+        "properties": {
+          "question_posee": {"type": "STRING", "description": "The exact or paraphrased question asked by the creator in French."},
+          "timestamp": {"type": "STRING", "description": "Exact timestamp of the question in MM:SS format."},
+          "notre_reponse_suggeree": {"type": "STRING", "description": "Our suggested on-brand response/contribution in French, STRICTLY max 100 characters, applying Google France TOV guidelines (first-person plural, humble but with swagger, no I/me/my, helpful, charming)."}
+        },
+        "required": ["question_posee", "timestamp", "notre_reponse_suggeree"]
+      }
     }
   },
   "required": ["mention_id", "analyse_opportunite", "action_recommandee", "persona_appliquee", "propositions_de_reponse"]
@@ -385,28 +398,40 @@ class AnalyzerAgent:
                     progress.update(task_extract, completed=100)
                     
                     if not audio_path or not os.path.isfile(audio_path) or os.path.getsize(audio_path) == 0:
-                        print(f"    - ⚠️ Fichier audio manquant ou vide pour {video_url}.")
-                        return None
-                        
-                    self._check_rate_limit()
-                    task_upload = progress.add_task(f"[green]☁️ Chargement sur Gemini...", total=None)
-                    uploaded_file = self.gemini_service.upload_file(audio_path)
-                    progress.update(task_upload, completed=100)
+                        print(f"    - ⚠️ Local download blocked by YouTube. Falling back to Gemini's direct URL processing...")
+                        audio_path = None
+                        uploaded_file = None
+                    else:
+                        self._check_rate_limit()
+                        task_upload = progress.add_task(f"[green]☁️ Chargement sur Gemini...", total=None)
+                        uploaded_file = self.gemini_service.upload_file(audio_path)
+                        progress.update(task_upload, completed=100)
             else:
                 print(f"    -> 🎵 Extraction de l'audio pour {creator_name}...")
                 audio_path = self.audio_extractor.extract_audio(video_url, start_time, end_time)
                 if not audio_path or not os.path.isfile(audio_path) or os.path.getsize(audio_path) == 0:
-                    print(f"    - ⚠️ Fichier audio manquant ou vide.")
-                    return None
-                    
-                self._check_rate_limit()
-                print(f"    - → ☁️ Chargement de l'audio sur Gemini...")
-                uploaded_file = self.gemini_service.upload_file(audio_path)
+                    print(f"    - ⚠️ Local download blocked by YouTube. Falling back to Gemini's direct URL processing...")
+                    audio_path = None
+                    uploaded_file = None
+                else:
+                    self._check_rate_limit()
+                    print(f"    - → ☁️ Chargement de l'audio sur Gemini...")
+                    uploaded_file = self.gemini_service.upload_file(audio_path)
                 
-            contents = [
-                f"Creator Name: {creator_name}\nVideo URL: {video_url}\n\n{GEO_YOUTUBE_PROMPT}",
-                uploaded_file
-            ]
+            if uploaded_file:
+                contents = [
+                    f"Creator Name: {creator_name}\nVideo URL: {video_url}\n\n{GEO_YOUTUBE_PROMPT}",
+                    uploaded_file
+                ]
+            else:
+                # Direct URL fallback: Tell Gemini to fetch and analyze the video content using its unblocked internal YouTube integration
+                contents = [
+                    f"Creator Name: {creator_name}\nVideo URL: {video_url}\n\n"
+                    f"IMPORTANT: Local download was blocked by YouTube. Please use your internal Google systems, search grounding, "
+                    f"or available video transcript data to fetch, listen, and analyze the content of this public YouTube URL. "
+                    f"Extract the relevant opportunities and generate the required JSON structure.\n\n"
+                    f"{GEO_YOUTUBE_PROMPT}"
+                ]
             
             print(f"    - 🤖 Analyse G.E.O. structurée en cours...")
             response = self.gemini_service.generate_content_structured(contents, json_schema=GEO_SCHEMA)

@@ -19,3 +19,7 @@ pydantic>=2.0.0
 
 # UI Dashboard
 streamlit>=1.30.0
+
+# Google Sheets Synchronization & Auth API
+gspread>=6.0.0
+google-auth>=2.0.0
